@@ -422,6 +422,50 @@ html, body {
   to   { opacity:1; transform: translateY(0); }
 }
 
+/* Countdown */
+.b-countdown {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 8px 0;
+}
+.b-cd-item {
+  text-align: center;
+  min-width: 48px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 4px;
+  padding: 6px 4px;
+}
+.b-cd-num {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px,5vw,26px);
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(201,168,76,0.4);
+}
+.b-cd-lbl {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(240,222,160,0.55);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.b-cd-sep {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  color: var(--gold);
+  opacity: 0.5;
+  align-self: center;
+  padding-bottom: 14px;
+  animation: blinkSep 1s infinite;
+}
+@keyframes blinkSep {
+  0%,100%{opacity:0.5} 50%{opacity:0.1}
+}
+
 /* back face content animations (trigger after flip) */
 .card.flipped .back-content > * {
   animation: fadeUp 0.7s both;
@@ -596,7 +640,7 @@ html, body {
             <div class="b-icon-wrap">📅</div>
             <div class="b-texts">
               <div class="b-key">Kuni</div>
-              <div class="b-val">25-may, 2026 yil, yakshanba</div>
+              <div class="b-val">25-may, 2026 yil, dushanba</div>
             </div>
           </div>
           <div class="b-row">
@@ -620,6 +664,16 @@ html, body {
               <div class="b-val">«A» sinf · 2006 yil bitiruvchilari</div>
             </div>
           </div>
+        </div>
+
+        <div class="b-countdown">
+          <div class="b-cd-item"><div class="b-cd-num" id="cd-d">00</div><div class="b-cd-lbl">Kun</div></div>
+          <div class="b-cd-sep">:</div>
+          <div class="b-cd-item"><div class="b-cd-num" id="cd-h">00</div><div class="b-cd-lbl">Soat</div></div>
+          <div class="b-cd-sep">:</div>
+          <div class="b-cd-item"><div class="b-cd-num" id="cd-m">00</div><div class="b-cd-lbl">Daqiqa</div></div>
+          <div class="b-cd-sep">:</div>
+          <div class="b-cd-item"><div class="b-cd-num" id="cd-s">00</div><div class="b-cd-lbl">Soniya</div></div>
         </div>
 
         <div class="b-divider" style="margin-top:4px">
@@ -825,6 +879,23 @@ function confirmAttend() {
   ];
   positions.forEach(([x,y], i) => setTimeout(() => burst(x,y), i*280));
 }
+/* ── Countdown ── */
+const TARGET = new Date("2026-05-25T08:00:00");
+function updateCD() {
+  const now = new Date();
+  const diff = TARGET - now;
+  if (diff <= 0) { ["cd-d","cd-h","cd-m","cd-s"].forEach(id => { const el=document.getElementById(id); if(el) el.textContent="00"; }); return; }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  const el_d=document.getElementById("cd-d"); if(el_d) el_d.textContent=String(d).padStart(2,"0");
+  const el_h=document.getElementById("cd-h"); if(el_h) el_h.textContent=String(h).padStart(2,"0");
+  const el_m=document.getElementById("cd-m"); if(el_m) el_m.textContent=String(m).padStart(2,"0");
+  const el_s=document.getElementById("cd-s"); if(el_s) el_s.textContent=String(s).padStart(2,"0");
+}
+updateCD();
+setInterval(updateCD, 1000);
 </script>
 </body>
 </html>
